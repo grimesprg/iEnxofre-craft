@@ -191,15 +191,7 @@ async function start(){
     app.innerHTML=`<div class="setup"><div class="setup-card"><div class="brand-mark">✦</div><h1>Enxofre Craft</h1><h2>Seu projeto está pronto para configurar.</h2><p>Conecte seu projeto Supabase para ativar login Google, produtos compartilhados, carrinho e painel administrativo.</p><ol><li>Crie um projeto no Supabase.</li><li>Execute <code>supabase/schema.sql</code> no SQL Editor.</li><li>Copie a URL e a chave anon/public para o arquivo <code>.env</code>.</li><li>Configure Google em Authentication → Providers.</li></ol><p class="muted">Veja o arquivo LEIA-ME.md para o passo a passo.</p></div></div>`;
     return;
   }
-  await loadData();await checkUser();await loadOrders();render();
-  supabase.auth.onAuthStateChange((event, session) => {
-  setTimeout(async () => {
-    await checkUser();
-    await loadOrders();
-    render();
-  
-}, 0);
-});
+  await loadData();await checkUser();await loadOrders();render();supabase.auth.onAuthStateChange((event, session) => {setTimeout(async () => {await checkUser();await loadOrders();render();}, 0);});
   supabase.channel('store-live').on('postgres_changes',{event:'*',schema:'public',table:'products'},async()=>{await loadData();render();}).on('postgres_changes',{event:'*',schema:'public',table:'store_settings'},async()=>{await loadData();render();}).subscribe();
 }
 start();
