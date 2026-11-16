@@ -192,7 +192,14 @@ async function start(){
     return;
   }
   await loadData();await checkUser();await loadOrders();render();
-  supabase.auth.onAuthStateChange(async()=>{await checkUser();await loadOrders();render();});
+  supabase.auth.onAuthStateChange((event, session) => {
+  setTimeout(async () => {
+    await checkUser();
+    await loadOrders();
+    render();
+  
+}, 0);
+});
   supabase.channel('store-live').on('postgres_changes',{event:'*',schema:'public',table:'products'},async()=>{await loadData();render();}).on('postgres_changes',{event:'*',schema:'public',table:'store_settings'},async()=>{await loadData();render();}).subscribe();
 }
 start();
